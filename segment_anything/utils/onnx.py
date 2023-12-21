@@ -42,7 +42,6 @@ class SamOnnxModel(nn.Module):
     def resize_longest_image_size(
         input_image_size: torch.Tensor, longest_side: int
     ) -> torch.Tensor:
-        input_image_size = input_image_size.to(torch.float32)
         scale = longest_side / torch.max(input_image_size)
         transformed_size = scale * input_image_size
         transformed_size = torch.floor(transformed_size + 0.5).to(torch.int64)
@@ -81,7 +80,7 @@ class SamOnnxModel(nn.Module):
             align_corners=False,
         )
 
-        prepadded_size = self.resize_longest_image_size(orig_im_size, self.img_size).to(torch.int64)
+        prepadded_size = self.resize_longest_image_size(orig_im_size, self.img_size)
         masks = masks[..., : prepadded_size[0], : prepadded_size[1]]  # type: ignore
 
         orig_im_size = orig_im_size.to(torch.int64)
